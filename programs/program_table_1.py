@@ -22,6 +22,7 @@ def generate_single(d):
         top_t = np.random.randint(1, 3)
     else:
         top_t = np.random.randint(3, 4)
+        
     # sample leg height
     leg_h = 2 * np.random.randint(4, 13) - top_t
 

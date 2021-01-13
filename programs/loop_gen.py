@@ -175,6 +175,7 @@ def decode_loop(input_batch):
 
                             if for_condition[0] == rotate:
                                 if items_in_loop_copy[0] == 10:
+#                                     raise "rotate 10"
                                     items_in_loop_copy[6] = items_in_loop[6] + for_condition[2] * loop_count
                                 elif items_in_loop_copy[0] == 17:
                                     rot_time = min(for_condition[1], 6)

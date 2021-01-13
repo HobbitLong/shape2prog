@@ -1,0 +1,11 @@
+draw('Top', 'Square', P=(0,-1,0), G=(1,6))
+
+for(i<2, 'Trans', u1=(0,0,7))
+    for(i<2, 'Trans', u2=(0,13,-1))
+        draw('Leg', 'Cub', P=(-7,-8,-5)+i*u1+j*u2, G=(9,3,3))
+
+for(i<2, 'Trans', u=(0,1,7))
+    draw('Hori_Bar', 'Cub', P=(-3,-8,-5)+i*u, G=(1,16,2))
+
+draw('Hori_Bar', 'Cub', P=(-4,-6,-5), G=(2,3,9))
+

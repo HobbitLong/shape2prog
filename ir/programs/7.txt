@@ -1,0 +1,11 @@
+draw('Top', 'Rec', P=(-1,0,0), G=(3,7,8))
+
+for(i<2, 'Trans', u1=(0,0,13))
+    for(i<2, 'Trans', u2=(0,13,0))
+        draw('Leg', 'Cub', P=(-12,-8,-8)+i*u1+j*u2, G=(15,2,2))
+
+draw('Back', 'Cub', P=(1,4,-8), G=(11,3,16), theta=10°)
+
+for(i<2, 'Trans', u=(0,0,14))
+    draw('Sideboard', 'Cub', P=(2,3,-8)+i*u, G=(6,4,1))
+

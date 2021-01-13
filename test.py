@@ -25,11 +25,11 @@ def parse_argument():
 
     parser = argparse.ArgumentParser(description="testing the program generator")
 
-    parser.add_argument('--model', type=str, default='./model/ckpts_GA_chair/program_generator_GA_chair.t7',
+    parser.add_argument('--model', type=str, default='./model/program_generator_GA_bed.t7',
                         help='path to the testing model')
-    parser.add_argument('--data', type=str, default='./data/chair_testing.h5',
+    parser.add_argument('--data', type=str, default='./data/bed_testing.h5',
                         help='path to the testing data')
-    parser.add_argument('--save_path', type=str, default='./output/chair/',
+    parser.add_argument('--save_path', type=str, default='./output/bed/',
                         help='path to save the output results')
     parser.add_argument('--batch_size', type=int, default=32, help='batch size')
     parser.add_argument('--num_workers', type=int, default=4, help='number of workers')
@@ -154,6 +154,8 @@ def run():
         interpreter = Interpreter(translate, rotate, end)
         num_programs = gen_shapes.shape[0]
         for i in range(min(num_programs, opt.num_render)):
+            # pgms[0]: 10 x 3, params[0]: 10 x 3 x 7
+            print(pgms[0], params[0])
             program = interpreter.interpret(pgms[i], params[i])
             save_file = os.path.join(opt.prog_save_path, '{}.txt'.format(i))
             with open(save_file, 'w') as out:
@@ -161,7 +163,7 @@ def run():
 
     # Visualization
     if opt.save_img:
-        data = gen_shapes.transpose((0, 3, 2, 1))
+        data = ori_shapes.transpose((0, 3, 2, 1))
         data = np.flip(data, axis=2)
         num_shapes = data.shape[0]
         for i in range(min(num_shapes, opt.num_render)):

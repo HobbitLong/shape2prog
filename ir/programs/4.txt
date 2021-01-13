@@ -1,0 +1,12 @@
+draw('Top', 'Circle', P=(-10,-2,0), G=(6,7))
+
+for(i<2, 'Trans', u=(0,0,8))
+    draw('Sideboard', 'Cub', P=(-11,-3,-6)+i*u, G=(8,6,3))
+
+draw('Base', 'Square', P=(-11,-3,0), G=(1,3))
+
+draw('Back', 'Cub', P=(-5,0,-4), G=(16,3,7), theta=14°)
+
+for(i<2, 'Trans', u=(0,0,9))
+    draw('Sideboard', 'Cub', P=(-5,-4,-6)+i*u, G=(2,3,2))
+

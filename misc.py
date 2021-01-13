@@ -24,8 +24,73 @@ from programs.utils import draw_back_support as draw_back_support_new
 
 from programs.loop_gen import decode_loop, translate, rotate, end
 
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from pytorch3d.ops import sample_points_from_meshes
+
+def plot_pointcloud(points, title=""):
+    # Sample points uniformly from the surface of the mesh.
+    x, y, z = points.clone().detach().cpu().unbind(1)    
+    fig = plt.figure(figsize=(5, 5))
+    ax = Axes3D(fig)
+    #ax.scatter3D(x, y, z)
+    ax.scatter3D(z, y, x)
+#     ax.grid(False)
+#     ax.set_xticks([])
+#     ax.set_yticks([])
+#     ax.set_zticks([])
+    max_range = np.array([x.max()-x.min(), y.max()-y.min(), z.max()-z.min()]).max() / 2.0
+#     mid_x = (x.max()+x.min()) * 0.5
+#     mid_y = (y.max()+y.min()) * 0.5
+#     mid_z = (z.max()+z.min()) * 0.5
+#     ax.set_xlim(mid_x - max_range, mid_x + max_range)
+#     ax.set_ylim(mid_y - max_range, mid_y + max_range)
+#     ax.set_zlim(mid_z - max_range, mid_z + max_range)
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    ax.view_init(20,)
+#     plt.axis('off')
+    plt.show()    
+    plt.savefig("save_img/" + "render" + title)
+    
+def plot_mesh(mesh, title=""):
+    # Sample points uniformly from the surface of the mesh.
+    points = sample_points_from_meshes(mesh, 1000).squeeze_()
+#     points=points[:,[1,2,0]]
+    x, y, z = points.clone().detach().cpu().unbind(1)
+    print("z: min: {}, max: {}".format(torch.min(z),torch.max(z)))
+    fig = plt.figure(figsize=(5, 5))
+    ax = Axes3D(fig)
+    ax.scatter3D(x, y, z)
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+#     ax.view_init(190, 30)
+    plt.show()
+    
+def plot_voxels(voxel,title=""):
+    # plot one voxel data
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    ax.voxels(voxel)
+    ax.grid(False)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_zticks([])
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    
+#     ax.view_init(190, 30)
+    plt.axis('off')
+
+    plt.show()
+    plt.savefig("save_img/" + "voxel" + title)
 
 def get_distance_to_center():
+    '''Distance of every grid point to the center'''
     x = np.arange(32)
     y = np.arange(32)
     xx, yy = np.meshgrid(x, y)
@@ -44,9 +109,11 @@ def to_contiguous(tensor):
 
 def clip_gradient(optimizer, grad_clip):
     for group in optimizer.param_groups:
-        for param in group['params']:
-            param.grad.data.clamp_(-grad_clip, grad_clip)
-
+        for i,param in enumerate(group['params']):
+            try:
+                param.grad.data.clamp_(-grad_clip, grad_clip)
+            except:
+                pass
 
 def get_class(pgm):
     if pgm.dim() == 3:
@@ -246,7 +313,7 @@ def decode_pgm(pgm, param, loop_free=True):
     if flag == 0:
         data_loop.append(np.asarray([0, 0, 0, 0, 0, 0, 0, 0]))
         data_loop.append(np.asarray([0, 0, 0, 0, 0, 0, 0, 0]))
-
+    
     data_loop = [x.tolist() for x in data_loop]
     data_loop_free = decode_loop(data_loop)
     data_loop_free = np.asarray(data_loop_free)
@@ -357,7 +424,9 @@ def render_block(data, pgm, param):
     for i in range(bsz):
         loop_free = decode_pgm(pgm[i], param[i])
         cur_pgm = loop_free[:, 0]
+        #if i==3:print(cur_pgm)
         cur_param = loop_free[:, 1:]
+        #if i==3:print(cur_param)
         for j in range(len(cur_pgm)):
             data[i] = render_one_step_new(data[i], cur_pgm[j], cur_param[j])
 
@@ -428,3 +497,78 @@ class AverageMeter(object):
         self.sum += val * n
         self.count += n
         self.avg = self.sum / self.count
+
+import neuralnet_pytorch as nnt
+import torch as T
+from torch_scatter import scatter_add
+
+
+def pointcloud2voxel_fast(pc: T.Tensor, voxel_size: int, grid_size=1., filter_outlier=True):
+    b, n, _ = pc.shape
+    half_size = grid_size / 2.
+    breakpoint()
+    valid = (pc >= -half_size) & (pc <= half_size)
+    valid = T.all(valid, 2)
+    pc_grid = (pc + half_size) * (voxel_size - 1.)
+    indices_floor = T.floor(pc_grid)
+    indices = indices_floor.long()
+    batch_indices = T.arange(b).to(pc.device)
+    batch_indices = nnt.utils.shape_padright(batch_indices)
+    batch_indices = nnt.utils.tile(batch_indices, (1, n))
+    batch_indices = nnt.utils.shape_padright(batch_indices)
+    indices = T.cat((batch_indices, indices), 2)
+    indices = T.reshape(indices, (-1, 4))
+
+    r = pc_grid - indices_floor
+    rr = (1. - r, r)
+    if filter_outlier:
+        valid = valid.flatten()
+        indices = indices[valid]
+
+    def interpolate_scatter3d(pos):
+        updates_raw = rr[pos[0]][..., 0] * rr[pos[1]][..., 1] * rr[pos[2]][..., 2]
+        updates = updates_raw.flatten()
+
+        if filter_outlier:
+            updates = updates[valid]
+
+        indices_shift = T.tensor([[0] + pos]).to(pc.device)
+        indices_loc = indices + indices_shift
+        out_shape = (b,) + (voxel_size,) * 3
+        out = T.zeros(*out_shape).to(pc.device).flatten()
+        voxels = scatter_add(updates, nnt.utils.ravel_index(indices_loc.t(), out_shape), out=out).view(*out_shape)
+        return voxels
+
+    voxels = [interpolate_scatter3d([k, j, i]) for k in range(2) for j in range(2) for i in range(2)]
+    voxels = sum(voxels)
+    voxels = T.clamp(voxels, 0., 1.)
+    return voxels
+
+
+def voxelize(pc, vox_size=32):
+    vox = pointcloud2voxel_fast(pc, vox_size)
+    vox = T.clamp(vox, 0., 1.)
+    vox = T.squeeze(vox)
+    return vox
+
+
+def iou(pred, gt, th=.5):
+    pred = pred > th
+    gt = gt > th
+    intersect = T.sum(pred & gt).float()
+    union = T.sum(pred | gt).float()
+    iou_score = intersect / (union + 1e-8)
+    return iou_score
+
+
+def batch_iou(bpc1, bpc2, voxsize=32, thres=.4):
+    def _iou(pc1, pc2):
+        pc1 = pc1 - T.mean(pc1, -2, keepdim=True)
+        pc1 = voxelize(pc1[None], voxsize)
+
+        pc2 = pc2 - T.mean(pc2, -2, keepdim=True)
+        pc2 = voxelize(pc2[None], voxsize)
+        return iou(pc1, pc2, thres)
+
+    total = map(_iou, bpc1, bpc2)
+    return sum(total) / len(bpc1)

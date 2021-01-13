@@ -15,21 +15,24 @@ class LSTMClassCriterion(nn.Module):
         pred = pred.clone()
         target = target.clone()
         mask = mask.clone()
+
         target = target[:, :pred.size(1)]
         mask = mask[:, :pred.size(1)]
+
         pred = to_contiguous(pred).view(-1, pred.size(2))
         target = to_contiguous(target).view(-1, 1)
         mask = to_contiguous(mask).view(-1, 1)
+
         # compute loss
         loss = - pred.gather(1, target) * mask
         loss = torch.sum(loss) / torch.sum(mask)
+
         # compute accuracy
         _, idx = torch.max(pred, dim=1)
         correct = idx.eq(torch.squeeze(target))
         correct = correct.float() * torch.squeeze(mask)
         accuracy = torch.sum(correct) / torch.sum(mask)
         return loss, accuracy
-
 
 class LSTMRegressCriterion(nn.Module):
     def __init__(self):

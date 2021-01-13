@@ -7,7 +7,7 @@ from numpy.linalg import norm
 # positions to center (16, 16, 16)
 ###########################
 
-
+#1
 def draw_vertical_leg(data, h, s1, s2, t, r1, r2):
     """
     "Leg", "Cuboid"
@@ -18,7 +18,7 @@ def draw_vertical_leg(data, h, s1, s2, t, r1, r2):
     step = np.asarray([1, h, s1, s2, t, r1, r2])
     return data, step
 
-
+#2
 def draw_rectangle_top(data, h, c1, c2, t, r1, r2):
     """
     "Top", "Rectangle"
@@ -51,7 +51,7 @@ def draw_circle_top(data, h, c1, c2, t, r):
     step = np.asarray([4, h, c1, c2, t, r])
     return data, step
 
-
+#5
 def draw_middle_rect_layer(data, h, c1, c2, t, r1, r2):
     """
     "Layer", "Rectangle"
@@ -106,7 +106,7 @@ def draw_square_base(data, h, c1, c2, t, r):
     step = np.asarray([9, h, c1, c2, t, r])
     return data, step
 
-
+#10
 def draw_cross_base(data, h, c1, c2, t, r, angle):
     """
     "Base", "Cross" ("line")
@@ -140,7 +140,7 @@ def draw_sideboard(data, h, s1, s2, t, r1, r2):
     step = np.asarray([11, h, s1, s2, t, r1, r2])
     return data, step
 
-
+#12
 def draw_horizontal_bar(data, h, s1, s2, t, r1, r2):
     """
     "Horizontal_Bar", "Cuboid"
@@ -158,6 +158,7 @@ def draw_vertboard(data, h, s1, s2, t, r1, r2):
     :param (h, s1, s2): position
     :param (r1, r2, t): shape
     """
+    import pdb
     data[cut(16 + h):cut(16 + h + t), cut(16 + s1):cut(16 + s1 + r1), cut(16 + s2):cut(16 + s2 + r2)] = 1
     step = np.asarray([13, h, s1, s2, t, r1, r2])
     return data, step
@@ -222,12 +223,9 @@ def draw_line(data, x1, y1, z1, x2, y2, z2, r=1):
         line_a = (p2 - p1) / line_len
 
     sample_n = int(np.ceil(np.pi * r * r * line_len * 10))
-    # print(np.dot(np.random.rand(sample_n, 1), np.reshape(p2 - p1, (1, 3))))
     p3 = np.around(p1 + np.dot(np.random.rand(sample_n, 1), np.reshape(p2 - p1, (1, 3))) + (
             np.random.rand(sample_n, 3) - 0.5) * 2 * r).astype(int)
     p3 = np.clip(p3, 0, full_l - 1)
-    # print(p3)
-    # quit()
 
     line_b = p3 - p1
     proj = np.dot(line_b, line_a)

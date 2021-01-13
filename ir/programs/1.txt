@@ -1,0 +1,18 @@
+draw('Top', 'Circle', P=(-2,-2,0), G=(4,11))
+
+draw('Sup', 'Cylinder', P=(-11,1,0), G=(13,3))
+
+draw('Base', 'Circle', P=(-11,0,0), G=(1,10))
+
+draw('Back', 'Cub', P=(1,5,-10), G=(10,4,19), theta=21°)
+
+for(i<2, 'Trans', u=(0,0,19))
+    draw('Sideboard', 'Cub', P=(2,-2,-11)+i*u, G=(7,9,3))
+
+for(i<2, 'Trans', u=(0,0,18))
+    draw('Sideboard', 'Cub', P=(2,-2,-11)+i*u, G=(5,8,3))
+
+draw('Locker', 'Cub', P=(-4,-10,5), G=(3,15,4))
+
+draw('Locker', 'Cub', P=(-5,-10,5), G=(2,15,4))
+

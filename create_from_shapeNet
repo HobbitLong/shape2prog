@@ -1,0 +1,139 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# generate voxelized data from shapeNet synset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# store voxelized data and mesh data in a single .h5 file"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# create/store shapenet voxel data in a .h5 file\n",
+    "# Is saving as a Meshes object good? Or should store a something else\n",
+    "# maybe a list of Meshes.\n",
+    "import os\n",
+    "import h5py\n",
+    "import trimesh\n",
+    "import glob\n",
+    "from pytorch3d.io import load_objs_as_meshes, load_obj\n",
+    "    \n",
+    "def dataset_from_shapeNet(synset_path):\n",
+    "    '''Store all the voxel and mesh data of the synset under the path\n",
+    "    in a .h5 file.\n",
+    "    :args:\n",
+    "    synset_path (str): path to an unziped synset directory\n",
+    "    '''\n",
+    "    # find all files under synset\n",
+    "    shape_path_list = glob.glob(os.path.join(synset_path, \"*\"))\n",
+    "    shapes = []\n",
+    "    mesh_paths = []\n",
+    "    \n",
+    "    for shape_path in shape_path_list:\n",
+    "        # get voxal path\n",
+    "#         vox_path = os.path.join(shape_path, \n",
+    "#                                 \"models/model_normalized.solid.binvox\")        \n",
+    "#         vox = trimesh.load(vox_path)\n",
+    "#         vox = vox.revoxelized((32,32,32))\n",
+    "#         vox_array = vox.matrix.astype(float)\n",
+    "        \n",
+    "        # get mesh path\n",
+    "        mesh_path = os.path.join(shape_path,\n",
+    "                                \"models/model_normalized.obj\")\n",
+    "        mesh_paths.append(mesh_path)\n",
+    "\n",
+    "    meshes = load_objs_as_meshes(mesh_paths, \n",
+    "                                 load_textures=False)\n",
+    "\n",
+    "    # save\n",
+    "    file = './shapeNetData/bench_mesh_02828884.h5'\n",
+    "    f_train = h5py.File(file, 'w')\n",
+    "#     f_train['data'] = shapes\n",
+    "    f_train['mesh'] = meshes\n",
+    "    f_train.close()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "file = './bench_mesh_02828884.h5'\n",
+    "f_train = h5py.File(file, 'w')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "OSError",
+     "evalue": "Unable to create file (unable to open file: name = './shapeNetData/bench_mesh_02828884.h5', errno = 2, error message = 'No such file or directory', flags = 13, o_flags = 242)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mOSError\u001b[0m                                   Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-2-7f07c8f7433a>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mdataset_from_shapeNet\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"shapeNetData/02828884\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[0;32m<ipython-input-1-029c891ad54b>\u001b[0m in \u001b[0;36mdataset_from_shapeNet\u001b[0;34m(synset_path)\u001b[0m\n\u001b[1;32m     37\u001b[0m     \u001b[0;31m# save\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     38\u001b[0m     \u001b[0mfile\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m'./shapeNetData/bench_mesh_02828884.h5'\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 39\u001b[0;31m     \u001b[0mf_train\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mh5py\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mFile\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfile\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'w'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     40\u001b[0m \u001b[0;31m#     f_train['data'] = shapes\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     41\u001b[0m     \u001b[0mf_train\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'mesh'\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mmeshes\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/disk/ocean/yichao-liang/miniconda3/envs/shape2prog/lib/python3.7/site-packages/h5py/_hl/files.py\u001b[0m in \u001b[0;36m__init__\u001b[0;34m(self, name, mode, driver, libver, userblock_size, swmr, rdcc_nslots, rdcc_nbytes, rdcc_w0, track_order, **kwds)\u001b[0m\n\u001b[1;32m    406\u001b[0m                 fid = make_fid(name, mode, userblock_size,\n\u001b[1;32m    407\u001b[0m                                \u001b[0mfapl\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfcpl\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mmake_fcpl\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtrack_order\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mtrack_order\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 408\u001b[0;31m                                swmr=swmr)\n\u001b[0m\u001b[1;32m    409\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    410\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mlibver\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtuple\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/disk/ocean/yichao-liang/miniconda3/envs/shape2prog/lib/python3.7/site-packages/h5py/_hl/files.py\u001b[0m in \u001b[0;36mmake_fid\u001b[0;34m(name, mode, userblock_size, fapl, fcpl, swmr)\u001b[0m\n\u001b[1;32m    177\u001b[0m         \u001b[0mfid\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mh5f\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcreate\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mname\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mh5f\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mACC_EXCL\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfapl\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mfapl\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfcpl\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mfcpl\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    178\u001b[0m     \u001b[0;32melif\u001b[0m \u001b[0mmode\u001b[0m \u001b[0;34m==\u001b[0m \u001b[0;34m'w'\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 179\u001b[0;31m         \u001b[0mfid\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mh5f\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcreate\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mname\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mh5f\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mACC_TRUNC\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfapl\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mfapl\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfcpl\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mfcpl\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    180\u001b[0m     \u001b[0;32melif\u001b[0m \u001b[0mmode\u001b[0m \u001b[0;34m==\u001b[0m \u001b[0;34m'a'\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    181\u001b[0m         \u001b[0;31m# Open in append mode (read/write).\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32mh5py/_objects.pyx\u001b[0m in \u001b[0;36mh5py._objects.with_phil.wrapper\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;32mh5py/_objects.pyx\u001b[0m in \u001b[0;36mh5py._objects.with_phil.wrapper\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;32mh5py/h5f.pyx\u001b[0m in \u001b[0;36mh5py.h5f.create\u001b[0;34m()\u001b[0m\n",
+      "\u001b[0;31mOSError\u001b[0m: Unable to create file (unable to open file: name = './shapeNetData/bench_mesh_02828884.h5', errno = 2, error message = 'No such file or directory', flags = 13, o_flags = 242)"
+     ]
+    }
+   ],
+   "source": [
+    "dataset_from_shapeNet(\"shapeNetData/02828884\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

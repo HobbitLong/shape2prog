@@ -1,0 +1,16 @@
+draw('Top', 'Rec', P=(0,-2,0), G=(2,6,6))
+
+for(i<2, 'Trans', u1=(0,0,10))
+    for(i<2, 'Trans', u2=(0,10,0))
+        draw('Leg', 'Cub', P=(-12,-7,-6)+i*u1+j*u2, G=(14,2,1))
+
+for(i<2, 'Trans', u=(0,0,12))
+    draw('Hori_Bar', 'Cub', P=(-8,-6,-6)+i*u, G=(1,13,0))
+
+draw('Back_sup', 'Cub', P=(1,5,-1), G=(3,1,3))
+
+draw('Back', 'Cub', P=(4,5,-6), G=(8,1,12), theta=7°)
+
+for(i<2, 'Trans', u=(0,0,10))
+    draw('Sideboard', 'Cub', P=(3,2,-6)+i*u, G=(3,4,1))
+

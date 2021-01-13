@@ -8,6 +8,7 @@ import torch
 import torch.optim as optim
 import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader
+import pdb
 
 from dataset import Synthesis3D
 from model import BlockOuterNet
@@ -53,6 +54,7 @@ def train(epoch, train_loader, model, crit_cls, crit_reg, optimizer, opt):
         labels = labels.contiguous().view(bsz, n_block * n_step)
         masks = masks.contiguous().view(bsz, n_block * n_step)
         out_pgm = out[0].view(bsz, n_block * n_step, opt.program_size + 1)
+        pdb.set_trace()
 
         bsz, n_block, n_step, n_param = params.size()
         params = params.contiguous().view(bsz, n_block * n_step, n_param)
@@ -74,7 +76,8 @@ def train(epoch, train_loader, model, crit_cls, crit_reg, optimizer, opt):
 
         if idx % opt.info_interval == 0:
             print("Train: epoch {} batch {}/{}, loss_cls = {:.3f}, loss_reg = {:.3f}, acc = {:.3f}, time = {:.3f}"
-                  .format(epoch, idx, len(train_loader), loss_cls.data[0], loss_reg.data[0], acc.data[0], end - start))
+                  .format(epoch, idx, len(train_loader), loss_cls.data.item(),
+                      loss_reg.data.item(), acc.data.item(), end - start))
             sys.stdout.flush()
 
 
@@ -127,7 +130,8 @@ def validate(epoch, val_loader, model, crit_cls, crit_reg, opt, gen_shape=False)
 
         if idx % opt.info_interval == 0:
             print("Test: epoch {} batch {}/{}, loss_cls = {:.3f}, loss_reg = {:.3f}, acc = {:.3f}, time = {:.3f}"
-                  .format(epoch, idx, len(val_loader), loss_cls.data[0], loss_reg.data[0], acc.data[0], end - start))
+                  .format(epoch, idx, len(val_loader), loss_cls.data.item(), loss_reg.data.item(),
+                      acc.data.item(), end - start))
             sys.stdout.flush()
 
     if gen_shape:

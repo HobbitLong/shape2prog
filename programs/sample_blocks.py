@@ -103,8 +103,12 @@ def sample_batch(num, primitive_type):
         elif primitive_type == 115:   # 44
             d, s = sample_new_base_single()
 
+        elif primitive_type == 201: # new added primitives
+            d, s = sample_ellipsoid()
+
         elif primitive_type == 0:   # 45
             return data, label
+
         else:
             raise NotImplementedError('type is not implemented: ', primitive_type)
         data[i] = d

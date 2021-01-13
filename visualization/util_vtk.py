@@ -115,12 +115,13 @@ def display(actors, cam_pos, cam_vocal, cam_up, save_name=None):
     
     renWin.SetSize(window_size, window_size)
 
-    # iren = vtk.vtkRenderWindowInteractor()
-    # style = vtk.vtkInteractorStyleTrackballCamera()
-    # iren.SetInteractorStyle(style)
-    # iren.SetRenderWindow(renWin)
-    # if title != None:
-    #     renWin.SetWindowName(title)
+    iren = vtk.vtkRenderWindowInteractor()
+    style = vtk.vtkInteractorStyleTrackballCamera()
+    iren.SetInteractorStyle(style)
+    iren.SetRenderWindow(renWin)
+    title=save_name
+    if title != None:
+        renWin.SetWindowName(title)
 
     renderer.ResetCameraClippingRange()
     renWin.Render()
@@ -134,8 +135,8 @@ def display(actors, cam_pos, cam_vocal, cam_up, save_name=None):
     writer.SetInputData(w2if.GetOutput())
     writer.Write()
 
-    # iren.Initialize()
-    # iren.Start()
+    iren.Initialize()
+    iren.Start()
 
 
 def visualization(voxels, threshold, save_name=None, uniform_size=-1, use_colormap=False):

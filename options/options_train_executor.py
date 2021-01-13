@@ -40,10 +40,10 @@ def get_parser():
     parser.add_argument('--max_param', type=int, default=max_param-1, help='maximum number of parameters')
 
     # data parameter
-    parser.add_argument('--batch_size', type=int, default=64, help='batch size of training and validating')
+    parser.add_argument('--batch_size', type=int, default=4, help='batch size of training and validating')
     parser.add_argument('--num_workers', type=int, default=8, help='num of threads for data loader')
-    parser.add_argument('--train_file', type=str, default='./data/train_blocks.h5', help='path to training file')
-    parser.add_argument('--val_file', type=str, default='./data/val_blocks.h5', help='path to val file')
+    parser.add_argument('--train_file', type=str, default='./data/train_blocks_smp.h5', help='path to training file')
+    parser.add_argument('--val_file', type=str, default='./data/val_blocks_smp.h5', help='path to val file')
     parser.add_argument('--model_name', type=str, default='program_executor', help='folder name to save model')
 
     # weighted loss

@@ -1,0 +1,77 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.2.202087883)
+
+mtllib model_normalized.mtl
+
+# 14 vertex positions
+v -0.470996 0.088312 0.000000
+v 0.470996 0.088312 0.147186
+v 0.470996 0.088312 0.000000
+v -0.470996 0.088312 0.147186
+v -0.470996 -0.014719 -0.117749
+v 0.470996 -0.014719 0.029437
+v 0.470996 -0.014719 -0.117749
+v -0.470996 -0.014719 0.029437
+v 0.470996 -0.117749 0.073593
+v 0.470996 0.088312 -0.058874
+v 0.470996 -0.117749 -0.073593
+v -0.470996 -0.117749 0.073593
+v -0.470996 0.088312 -0.058874
+v -0.470996 -0.117749 -0.073593
+
+# 8 UV coordinates
+vt 81 -23 0
+vt 80 -24 0
+vt 80 -23 0
+vt 81 -24 0
+vt -11.2857 -7 0
+vt -11.9286 -6 0
+vt -12 -7 0
+vt -10.9286 -6 0
+
+# 4 vertex normals
+vn 0 1 0
+vn 0 -1 -0
+vn -1 0 0
+vn 1 0 0
+
+# Mesh 'mesh1_mesh1-geometry' with 2 faces
+g mesh1_mesh1-geometry
+usemtl material_0_2_8
+f  1/1/1 2/2/1 3/3/1
+f  2/2/1 1/1/1 4/4/1
+
+# Mesh 'mesh1_mesh1-geometry' with 2 faces
+g mesh1_mesh1-geometry
+usemtl material_1_24
+f  3//2 2//2 1//2
+f  4//2 1//2 2//2
+
+# Mesh 'mesh2_mesh2-geometry' with 2 faces
+g mesh2_mesh2-geometry
+usemtl material_0_2_8
+f  5/1/1 6/2/1 7/3/1
+f  6/2/1 5/1/1 8/4/1
+
+# Mesh 'mesh2_mesh2-geometry' with 2 faces
+g mesh2_mesh2-geometry
+usemtl material_1_24
+f  7//2 6//2 5//2
+f  8//2 5//2 6//2
+
+# Mesh 'mesh3_mesh3-geometry' with 4 faces
+g mesh3_mesh3-geometry
+usemtl material_2_1_8
+f  9/5/3 10/6/3 11/7/3
+f  10/6/3 9/5/3 2/8/3
+f  11/7/4 10/6/4 9/5/4
+f  2/8/4 9/5/4 10/6/4
+
+# Mesh 'mesh4_mesh4-geometry' with 4 faces
+g mesh4_mesh4-geometry
+usemtl material_2_1_8
+f  12/5/3 13/6/3 14/7/3
+f  13/6/3 12/5/3 4/8/3
+f  14/7/4 13/6/4 12/5/4
+f  4/8/4 12/5/4 13/6/4
+
