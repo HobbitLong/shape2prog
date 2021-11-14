@@ -59,7 +59,7 @@ Several modifications have been implemented in this repo beyond the original pap
 
 We tabulate the comparion of IoU bwteen original paper and this repo as follows.
 
-|          |Chair | Table | Bed  | Sofa  | Cabinet |  Bench  |
+|          |Table | Chair | Bed  | Sofa  | Cabinet |  Bench  |
 |----------|:----:|:---:|:---:|:---:|:---:|:---:|
 |  **Paper** | .591 | .516  | .367  | .597  |  .478  | .418 |
 | **This Repo** | .663 | .560  | .439  | .649  |  .598  | .461 |
